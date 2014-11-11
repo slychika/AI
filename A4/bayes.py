@@ -85,16 +85,38 @@ def main():
     #pollution distribution
     pDistribution = DiscreteDistribution(pNode)
     pindex = pDistribution.generate_index([],[])
-    pDistribution[pindex] = 0.9
+    pDistribution[pindex] = [0.9, 0.1] #[low, high]
     pNode.set_dist(pDistribution)
     
-
     #smoker distruibution
     sDistribution = DiscreteDistribution(sNode)
     sindex = sDistribution.generate_index([],[])
-    sDistribution[sindex] = 0.3
+    sDistribution[sindex] = [0.3, 0.7] #[true, false]
     sNode.set_dist(sDistribution)
 
+    #cancer distruibution
+    #note: high =1, low =0, pos = 1, neg =0
+    cdist = zeros([pNode.size(), sNode.size(), cNode.size()], dtype=float32)
+    cdist[0,0,] = [0.001,0.999]  #low, false [true,false]
+    cdist[0,1,] = [0.03,0.97]    #low, true [true, false]
+    cdist[1,0,] = [0.02,0.98]    #high, false [true, false]
+    cdist[1,1,] = [0.05,0.95]    #high, true [true, false]
+    cDistribution = ConditionalDiscreteDistribution(nodes=[pNode, sNode, cNode], table=cdist)
+    cNode.set_dist(cDistribution)
+    
+    #xray distruibution 
+    xdist = zeros([cNode.size(), xNode.size()], dtype = float32)
+    xdist[0,] = [0.20, 0.80] #neg [true, false]
+    xdist[1,] = [0.90, 0.10] #pos [true, false]
+    xDistribution = ConditionalDiscreteDistribution(nodes = [cNode, xNode], table = xdist)
+    xNode.set_dist(xDistribution)
+    
+    #dysponea distruibution
+    ddist = zeros([cNode.size(), dNode.size()], dtype = float32)
+    ddist[0,] = [0.30, 0.70] #false [true, false]
+    ddist[1,] = [0.65, 0.35] #true [true, false]
+    dDistribution = ConditionalDiscreteDistribution(nodes = [cNode, dNode], table = ddist)
+    dNode.set_dist(dDistribution)
     
     #create bayes net
     isCancer = BayesNet(nodes)
