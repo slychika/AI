@@ -1,3 +1,4 @@
+HEATHER IS AWESOME!
 Note: due to dependencies, the following tests will be run: q1
 Starting on 9-16 at 19:47:54
 
@@ -184,4 +185,3 @@ the spirit of the course,  such as if your submission simply hardcoded
 the answers to the tests.   We will screen for this after the deadline.
 
 *If you worked with a partner, you must both submit separately.*
-
